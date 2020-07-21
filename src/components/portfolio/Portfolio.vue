@@ -6,15 +6,21 @@
 
  <script>
 import { mapGetters } from "vuex";
-import Stock from './Stock.vue';
+import Stock from "./Stock.vue";
 export default {
   computed: {
     ...mapGetters({
       stocks: "stockPortfolio"
     })
   },
-  components:{
-    appStock:Stock
+  components: {
+    appStock: Stock
   }
 };
 </script>
+
+<style scoped>
+.danger {
+  border: 1px solid red;
+}
+</style>

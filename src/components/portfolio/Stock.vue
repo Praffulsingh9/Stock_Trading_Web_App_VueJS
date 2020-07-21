@@ -9,10 +9,20 @@
       </div>
       <div class="panel-body">
         <div class="pull-left">
-          <input type="number" class="form-control" placeholder="Quantity" v-model="quantity" />
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Quantity"
+            v-model="quantity"
+            :class="{danger:insufficientQuantity}"
+          />
         </div>
         <div class="pull-right">
-          <button class="btn btn-success" @click="sellStock" :disabled="quantity <= 0">Sell</button>
+          <button
+            class="btn btn-success"
+            @click="sellStock"
+            :disabled="insufficientQuantity ||  quantity <= 0"
+          >{{ insufficientQuantity ? 'Not enough' : 'Sell' }}</button>
         </div>
       </div>
     </div>
@@ -28,10 +38,15 @@ export default {
       quantity: 0
     };
   },
+  computed: {
+    insufficientQuantity() {
+      return this.quantity > this.stock.quantity;
+    }
+  },
   methods: {
-    ...mapActions([
-      'sellStock'
-    ]),
+    ...mapActions({
+      placeSellOrder: "sellStock"
+    }),
 
     sellStock() {
       const order = {
@@ -39,7 +54,8 @@ export default {
         stockPrice: this.stock.price,
         quantity: this.quantity
       };
-      this.sellStock(order);
+      this.placeSellOrder(order);
+      this.quantity = 0;
     }
   }
 };
